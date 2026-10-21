@@ -1,0 +1,29 @@
+server:
+  port: ${PORT:8081}
+  
+spring:
+  application:
+    name: habilitations-api
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/habilitations}
+    username: ${DB_USER:habilitations}
+    password: ${DB_PASSWORD:habilitations}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate   # le schéma est géré par Flyway, Hibernate se contente de vérifier
+  flyway:
+    enabled: true
+
+app:
+  demo-data: ${DEMO_DATA:true}
+  jwt:
+    # HS256 : 32 caractères minimum. À surcharger en prod via la variable JWT_SECRET.
+    secret: ${JWT_SECRET:dev-secret-a-changer-absolument-32-caracteres-min}
+    ttl: 8h
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

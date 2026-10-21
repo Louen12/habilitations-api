@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: habilitations
+      POSTGRES_USER: habilitations
+      POSTGRES_PASSWORD: habilitations
+    ports:
+      - "5433:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U habilitations"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/habilitations
+      DB_USER: habilitations
+      DB_PASSWORD: habilitations
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-a-changer-absolument-32-caracteres-min}
+    ports:
+      - "8081:8081"
+
+volumes:
+  db-data:
